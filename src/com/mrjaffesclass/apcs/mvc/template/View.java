@@ -38,10 +38,11 @@ public class View extends javax.swing.JFrame implements MessageHandler {
     } else {
       System.out.println("MSG: received by view: "+messageName+" | No data sent");
     }
-    if (messageName.equals("model:variable1Changed")) {
-      jLabel8.setText(messagePayload.toString());
-    } else {
-      jLabel10.setText(messagePayload.toString());      
+    if (messageName.equals("???")) {
+      minAgeOut.setText(messagePayload.toString());
+    } 
+    if (messageName.equals("???")) {
+          maxAgeOut.setText(messagePayload.toString());
     }
   }
 
@@ -73,8 +74,8 @@ public class View extends javax.swing.JFrame implements MessageHandler {
         minAge = new javax.swing.JLabel();
         maxAge = new javax.swing.JLabel();
         datingImpermissable = new javax.swing.JToggleButton();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        minAgeOut = new javax.swing.JLabel();
+        maxAgeOut = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -105,9 +106,9 @@ public class View extends javax.swing.JFrame implements MessageHandler {
             }
         });
 
-        jLabel1.setText("?");
+        minAgeOut.setText("?");
 
-        jLabel2.setText("?");
+        maxAgeOut.setText("?");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -130,11 +131,11 @@ public class View extends javax.swing.JFrame implements MessageHandler {
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(maxAge)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(maxAgeOut, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(minAge)
                                     .addGap(48, 48, 48)
-                                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                    .addComponent(minAgeOut, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(93, 93, 93)
                         .addComponent(datingImpermissable, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -154,11 +155,11 @@ public class View extends javax.swing.JFrame implements MessageHandler {
                 .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(minAge)
-                    .addComponent(jLabel1))
+                    .addComponent(minAgeOut))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maxAge)
-                    .addComponent(jLabel2))
+                    .addComponent(maxAgeOut))
                 .addGap(28, 28, 28)
                 .addComponent(datingImpermissable, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(38, Short.MAX_VALUE))
@@ -189,9 +190,9 @@ public class View extends javax.swing.JFrame implements MessageHandler {
     private javax.swing.JLabel askingName;
     private javax.swing.JTextField askingNameIn;
     private javax.swing.JToggleButton datingImpermissable;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel maxAge;
+    private javax.swing.JLabel maxAgeOut;
     private javax.swing.JLabel minAge;
+    private javax.swing.JLabel minAgeOut;
     // End of variables declaration//GEN-END:variables
 }
