@@ -13,8 +13,9 @@ public class Model implements MessageHandler {
   private final Messenger mvcMessaging;
 
   // Model's data variables
-  private int variable1;
-  private int variable2;
+  private int maxAge;
+  private int minAge;
+  private int age;
 
   /**
    * Model constructor: Create the data representation of the program
@@ -29,9 +30,8 @@ public class Model implements MessageHandler {
    * Initialize the model here and subscribe to any required messages
    */
   public void init() {
-    mvcMessaging.subscribe("view:changeButton", this);
-    setVariable1(10);
-    setVariable2(-10);
+    mvcMessaging.subscribe("view:ageChanged", this);
+    setAge(this);
   }
   
   @Override
@@ -45,59 +45,73 @@ public class Model implements MessageHandler {
     int field = payload.getField();
     int direction = payload.getDirection();
     
-    if (direction == Constants.UP) {
-      if (field == 1) {
-        setVariable1(getVariable1()+Constants.FIELD_1_INCREMENT);
-      } else {
-        setVariable2(getVariable2()+Constants.FIELD_2_INCREMENT);
+        setMinAge(calculateMin());
+        setMaxAge(calculateMax());
+        
+        if(minAge > maxAge) { //If the person is too young to date, tell view not to let them date
+            mvcMessaging.notify("model:noPermissableDating", null, true);
+        }     
+  }
+  
+    /** Calculates the maximum permissable age for dating
+     * @return value of maximum permissable age
+     */
+  public int calculateMax() {
+      int v = (age + 7) * 2;
+      return v;
+  }
+  
+     /** Calculates the minimum permissable age for dating
+     * @return value of minimum permissable age
+     */
+  public int calculateMin() {
+      if(age%2 != 0) { //so that age divided by two is a whole number
+         age--;
       }
-    } else {
-      if (field == 1) {
-        setVariable1(getVariable1()-Constants.FIELD_1_INCREMENT);
-      } else {
-        setVariable2(getVariable2()-Constants.FIELD_2_INCREMENT);
-      }      
-    }
+      int v = (age/2) + 7;
+      return v;
   }
 
-  /**
-   * Getter function for variable 1
+   /** Getter function for minAge
    * @return Value of variable1
    */
-  public int getVariable1() {
-    return variable1;
+  public int getMinAge() {
+    return minAge;
   }
 
-  /**
-   * Setter function for variable 1
-   * @param v New value of variable1
+  /** Setter function for minAge
+   * @param v New value of minAge
    */
-  public void setVariable1(int v) {
-    variable1 = v;
+  public void setMinAge(int v) {
+    minAge = v;
     // When we set a new value to variable 1 we need to also send a
     // message to let other modules know that the variable value
     // was changed
-    mvcMessaging.notify("model:variable1Changed", variable1, true);
+    mvcMessaging.notify("model:minAgeChanged", minAge, true);
   }
   
-  /**
-   * Getter function for variable 1
-   * @return Value of variable2
+  /** Getter function for maxAge
+   * @return Value of maxAge
    */
-  public int getVariable2() {
-    return variable2;
+  public int getMaxAge() {
+    return maxAge;
   }
   
-  /**
-   * Setter function for variable 2
-   * @param v New value of variable 2
+  /** Setter function for maxAge
+   * @param v New value of maxAge
    */
-  public void setVariable2(int v) {
-    variable2 = v;
+  public void setMaxAge(int v) {
+     maxAge = v;
     // When we set a new value to variable 2 we need to also send a
     // message to let other modules know that the variable value
     // was changed
-    mvcMessaging.notify("model:variable2Changed", variable2, true);
+    mvcMessaging.notify("model:maxAgeChanged", maxAge, true);
   }
-
+  
+  /** Setter function for Age
+   * @param v new value for age
+   */
+  public void setAge(int v) {
+  age = v;  //the other 
+  }
 }
