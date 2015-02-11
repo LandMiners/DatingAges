@@ -1,5 +1,6 @@
 package com.mrjaffesclass.apcs.mvc.template;
 import com.mrjaffesclass.apcs.messenger.*;
+import java.util.Scanner;
 /**
  * MVC Template
  * This is a template of an MVC framework used by APCS for the 
@@ -10,6 +11,8 @@ import com.mrjaffesclass.apcs.messenger.*;
  */
 public class View extends javax.swing.JFrame implements MessageHandler {
 
+    double age1;
+    int age;
   private final Messenger mvcMessaging;
   
   /**
@@ -173,7 +176,9 @@ public class View extends javax.swing.JFrame implements MessageHandler {
     }//GEN-LAST:event_askingNameInActionPerformed
 
     private void askingAgeInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_askingAgeInActionPerformed
-        // TODO add your handling code here:
+        Scanner sb = new Scanner(System.in);
+        age1 = sb.nextDouble();
+        int age = (int)age1;
     }//GEN-LAST:event_askingAgeInActionPerformed
 
     private void datingImpermissableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_datingImpermissableActionPerformed
