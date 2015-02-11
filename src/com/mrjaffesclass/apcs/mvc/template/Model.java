@@ -31,7 +31,7 @@ public class Model implements MessageHandler {
    */
   public void init() {
     mvcMessaging.subscribe("view:ageChanged", this);
-    setAge(this);
+    //setAge(this);
   }
   
   @Override
@@ -42,15 +42,13 @@ public class Model implements MessageHandler {
       System.out.println("MSG: received by model: "+messageName+" | No data sent");
     }
     MessagePayload payload = (MessagePayload)messagePayload;
-    int field = payload.getField();
-    int direction = payload.getDirection();
-    
+    int age = payload.getDelivery();
+        if(age < 14) { //If the person is too young to date, tell view not to let them date
+            mvcMessaging.notify("model:noPermissableDating", null);
+        } else {
         setMinAge(calculateMin());
         setMaxAge(calculateMax());
-        
-        if(minAge > maxAge) { //If the person is too young to date, tell view not to let them date
-            mvcMessaging.notify("model:noPermissableDating", null, true);
-        }     
+        }
   }
   
     /** Calculates the maximum permissable age for dating
@@ -87,7 +85,7 @@ public class Model implements MessageHandler {
     // When we set a new value to variable 1 we need to also send a
     // message to let other modules know that the variable value
     // was changed
-    mvcMessaging.notify("model:minAgeChanged", minAge, true);
+    mvcMessaging.notify("model:minAgeChanged", minAge);
   }
   
   /** Getter function for maxAge
@@ -105,7 +103,7 @@ public class Model implements MessageHandler {
     // When we set a new value to variable 2 we need to also send a
     // message to let other modules know that the variable value
     // was changed
-    mvcMessaging.notify("model:maxAgeChanged", maxAge, true);
+    mvcMessaging.notify("model:maxAgeChanged", maxAge);
   }
   
   /** Setter function for Age
