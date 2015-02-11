@@ -13,6 +13,7 @@ public class View extends javax.swing.JFrame implements MessageHandler {
 
     double age1;
     int age;
+    
   private final Messenger mvcMessaging;
   
   /**
@@ -30,8 +31,8 @@ public class View extends javax.swing.JFrame implements MessageHandler {
    */
   public void init() {
     // Subscribe to messages here
-    mvcMessaging.subscribe("model:variable1Changed", this);
-    mvcMessaging.subscribe("model:variable2Changed", this);
+    mvcMessaging.subscribe("model:minAgeChanged", this);
+    mvcMessaging.subscribe("model:maxAgeChanged", this);
   }
   
   @Override
@@ -179,6 +180,7 @@ public class View extends javax.swing.JFrame implements MessageHandler {
         Scanner sb = new Scanner(System.in);
         age1 = sb.nextDouble();
         int age = (int)age1;
+        mvcMessaging.notify("view:ageChanged", age);
     }//GEN-LAST:event_askingAgeInActionPerformed
 
     private void datingImpermissableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_datingImpermissableActionPerformed
