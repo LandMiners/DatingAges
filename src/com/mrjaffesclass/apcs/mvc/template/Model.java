@@ -41,12 +41,16 @@ public class Model implements MessageHandler {
     } else {
       System.out.println("MSG: received by model: "+messageName+" | No data sent"); }
     if (messageName.equals("view:ageChanged")) {
-        if(age < 14) { //If the person is too young to date, tell view not to let them date
-            mvcMessaging.notify("model:noPermissableDating", null);
+        if ( 0 < age && age < 130) {  //exclude unreasonable numbers
+            if(age < 14) { //If the person is too young to date, tell view not to let them date
+                mvcMessaging.notify("model:noPermissableDating", null);
+            } else {
+                setMinAge(calculateMin());
+                setMaxAge(calculateMax());
+            }
         } else {
-        setMinAge(calculateMin());
-        setMaxAge(calculateMax());
-    }
+        mvcMessaging.notify("model:Liar", null);
+        }
     }
   }
   

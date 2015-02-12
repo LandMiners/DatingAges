@@ -34,6 +34,7 @@ public class View extends javax.swing.JFrame implements MessageHandler {
     mvcMessaging.subscribe("model:minAgeChanged", this); //listens for the minimum age
     mvcMessaging.subscribe("model:noPermissableDating", this); //listens for inibility to date
     mvcMessaging.subscribe("model:maxAgeChanged", this); //listens for the maximum age
+    mvcMessaging.subscribe("model:Liar", this); //for unreasonable values
   }
   
   @Override
@@ -50,8 +51,12 @@ public class View extends javax.swing.JFrame implements MessageHandler {
         maxAgeOut.setText("Maximum Dating Age is " + messagePayload.toString());
     }
     if (messageName.equals("model:noPermissableDating")) {
-        maxAgeOut.setText("Dating is not allowed at that age");
         minAgeOut.setText("Dating is not allowed at that age");
+        maxAgeOut.setText("Dating is not allowed at that age");
+    }
+    if (messageName.equals("model:Liar")) {//no one is negative years old or more than 130
+        minAgeOut.setText("That seems unlikely");
+        maxAgeOut.setText("That seems unlikely");
     }
   }
 
@@ -157,6 +162,9 @@ public class View extends javax.swing.JFrame implements MessageHandler {
             age1 = sb.nextDouble();
         int age = (int) age1;
         mvcMessaging.notify("view:ageChanged", age);
+        } else {
+        minAgeOut.setText("No numbers were found");
+        maxAgeOut.setText("Please write the age in numerical form");
         }
     }//GEN-LAST:event_askingAgeInActionPerformed
 
