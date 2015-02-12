@@ -31,31 +31,30 @@ public class Model implements MessageHandler {
    */
   public void init() {
     mvcMessaging.subscribe("view:ageChanged", this);
-    //setAge(this);
   }
   
   @Override
   public void messageHandler(String messageName, Object messagePayload) {
+    age = (int) messagePayload;
     if (messagePayload != null) {
       System.out.println("MSG: received by model: "+messageName+" | "+messagePayload.toString());
     } else {
-      System.out.println("MSG: received by model: "+messageName+" | No data sent");
-    }
-    MessagePayload payload = (MessagePayload)messagePayload;
-    int age = payload.getDelivery();
+      System.out.println("MSG: received by model: "+messageName+" | No data sent"); }
+    if (messageName.equals("view:ageChanged")) {
         if(age < 14) { //If the person is too young to date, tell view not to let them date
             mvcMessaging.notify("model:noPermissableDating", null);
         } else {
         setMinAge(calculateMin());
         setMaxAge(calculateMax());
-        }
+    }
+    }
   }
   
     /** Calculates the maximum permissable age for dating
      * @return value of maximum permissable age
      */
   public int calculateMax() {
-      int v = (age + 7) * 2;
+      int v = (age - 7) * 2;
       return v;
   }
   
