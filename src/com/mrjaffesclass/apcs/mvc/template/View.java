@@ -32,7 +32,7 @@ public class View extends javax.swing.JFrame implements MessageHandler {
   public void init() {
     // Subscribe to messages here
     mvcMessaging.subscribe("model:minAgeChanged", this); //listens for the minimum age
-    mvcMessaging.subscribe("model:noPermissableDating", this); //listens inibility to date
+    mvcMessaging.subscribe("model:noPermissableDating", this); //listens for inibility to date
     mvcMessaging.subscribe("model:maxAgeChanged", this); //listens for the maximum age
   }
   
@@ -44,15 +44,14 @@ public class View extends javax.swing.JFrame implements MessageHandler {
       System.out.println("MSG: received by view: "+messageName+" | No data sent");
     }
     if (messageName.equals("model:minAgeChanged")) {
-      minAgeOut.setText(messagePayload.toString());
+      minAgeOut.setText("Minimum Dating Age is " + messagePayload.toString());
     } 
     if (messageName.equals("model:maxAgeChanged")) {
-        maxAgeOut.setText(messagePayload.toString());
+        maxAgeOut.setText("Maximum Dating Age is " + messagePayload.toString());
     }
     if (messageName.equals("model:noPermissableDating")) {
         maxAgeOut.setText("Dating is not allowed at that age");
         minAgeOut.setText("Dating is not allowed at that age");
-
     }
   }
 
@@ -153,10 +152,10 @@ public class View extends javax.swing.JFrame implements MessageHandler {
     /* When the text for age is changed, notifies model with the new age
     */
     private void askingAgeInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_askingAgeInActionPerformed
-        Scanner sb = new Scanner(System.in);
+        Scanner sb = new Scanner(askingAgeIn.getText());
         if (sb.hasNextDouble()) {
             age1 = sb.nextDouble();
-        int age = (int)age1;
+        int age = (int) age1;
         mvcMessaging.notify("view:ageChanged", age);
         }
     }//GEN-LAST:event_askingAgeInActionPerformed
