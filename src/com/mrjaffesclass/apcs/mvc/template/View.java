@@ -31,11 +31,9 @@ public class View extends javax.swing.JFrame implements MessageHandler {
    */
   public void init() {
     // Subscribe to messages here
-    mvcMessaging.subscribe("model:minAgeChanged", this); //recieve the minimum age
-    minAgeOut.setText("Minimum Permissable Age" + this); //display the minimum age
-    
-    mvcMessaging.subscribe("model:maxAgeChanged", this); //recieve the maximum age
-        maxAgeOut.setText("Maximum Permissable Age" + this); //display the maximum age
+    mvcMessaging.subscribe("model:minAgeChanged", this); //listens for the minimum age
+    mvcMessaging.subscribe("model:noPermissableDating", this); //listens inibility to date
+    mvcMessaging.subscribe("model:maxAgeChanged", this); //listens for the maximum age
   }
   
   @Override
@@ -45,11 +43,16 @@ public class View extends javax.swing.JFrame implements MessageHandler {
     } else {
       System.out.println("MSG: received by view: "+messageName+" | No data sent");
     }
-    if (messageName.equals("???")) {
+    if (messageName.equals("model:minAgeChanged")) {
       minAgeOut.setText(messagePayload.toString());
     } 
-    if (messageName.equals("???")) {
-          maxAgeOut.setText(messagePayload.toString());
+    if (messageName.equals("model:maxAgeChanged")) {
+        maxAgeOut.setText(messagePayload.toString());
+    }
+    if (messageName.equals("model:noPermissableDating")) {
+        maxAgeOut.setText("Dating is not allowed at that age");
+        minAgeOut.setText("Dating is not allowed at that age");
+
     }
   }
 
@@ -58,7 +61,7 @@ public class View extends javax.swing.JFrame implements MessageHandler {
    * @param direction delivery, the number being delivered
    */
   private MessagePayload createPayload(int delivery) {
-    MessagePayload payload = new MessagePayload(age);
+    MessagePayload payload = new MessagePayload(delivery);
     return payload;
   }
 
@@ -77,7 +80,6 @@ public class View extends javax.swing.JFrame implements MessageHandler {
         askingAgeIn = new javax.swing.JTextField();
         minAgeOut = new javax.swing.JLabel();
         maxAgeOut = new javax.swing.JLabel();
-        buttonForInput = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -101,38 +103,26 @@ public class View extends javax.swing.JFrame implements MessageHandler {
 
         maxAgeOut.setText("Maximum Permissable Age");
 
-        buttonForInput.setText("Check Dating Ages");
-        buttonForInput.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonForInputActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(34, 34, 34)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(askingName, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(askingAge))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(askingAgeIn, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(askingNameIn, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(maxAgeOut, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(minAgeOut)
-                                    .addGap(130, 130, 130)))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(93, 93, 93)
-                        .addComponent(buttonForInput, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(askingName, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(askingAge))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(askingAgeIn, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(askingNameIn, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(maxAgeOut, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(minAgeOut)
+                            .addGap(130, 130, 130))))
                 .addContainerGap(52, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -150,9 +140,7 @@ public class View extends javax.swing.JFrame implements MessageHandler {
                 .addComponent(minAgeOut)
                 .addGap(18, 18, 18)
                 .addComponent(maxAgeOut)
-                .addGap(28, 28, 28)
-                .addComponent(buttonForInput, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -162,6 +150,8 @@ public class View extends javax.swing.JFrame implements MessageHandler {
         // TODO add your handling code here:
     }//GEN-LAST:event_askingNameInActionPerformed
 
+    /* When the text for age is changed, notifies model with the new age
+    */
     private void askingAgeInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_askingAgeInActionPerformed
         Scanner sb = new Scanner(System.in);
         if (sb.hasNextDouble()) {
@@ -170,10 +160,6 @@ public class View extends javax.swing.JFrame implements MessageHandler {
         mvcMessaging.notify("view:ageChanged", age);
         }
     }//GEN-LAST:event_askingAgeInActionPerformed
-
-    private void buttonForInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonForInputActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_buttonForInputActionPerformed
 
   /**
    * @param args the command line arguments
@@ -184,7 +170,6 @@ public class View extends javax.swing.JFrame implements MessageHandler {
     private javax.swing.JTextField askingAgeIn;
     private javax.swing.JLabel askingName;
     private javax.swing.JTextField askingNameIn;
-    private javax.swing.JToggleButton buttonForInput;
     private javax.swing.JLabel maxAgeOut;
     private javax.swing.JLabel minAgeOut;
     // End of variables declaration//GEN-END:variables
