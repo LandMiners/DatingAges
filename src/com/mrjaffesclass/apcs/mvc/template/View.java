@@ -31,8 +31,11 @@ public class View extends javax.swing.JFrame implements MessageHandler {
    */
   public void init() {
     // Subscribe to messages here
-    mvcMessaging.subscribe("model:minAgeChanged", this);
-    mvcMessaging.subscribe("model:maxAgeChanged", this);
+    mvcMessaging.subscribe("model:minAgeChanged", this); //recieve the minimum age
+    minAgeOut.setText("Minimum Permissable Age" + this); //display the minimum age
+    
+    mvcMessaging.subscribe("model:maxAgeChanged", this); //recieve the maximum age
+        maxAgeOut.setText("Maximum Permissable Age" + this); //display the maximum age
   }
   
   @Override
@@ -51,14 +54,11 @@ public class View extends javax.swing.JFrame implements MessageHandler {
   }
 
   /**
-   * Instantiate an object with the field number that was clicked (1 or 2) and
-   * the direction that the number should go (up or down)
-   * @param fieldNumber 1 or 2 for the field being modified
-   * @param direction this.UP (1) or this.DOWN (-1), constants defined above
-   * @return the HashMap payload to be sent with the message
+   * Instantiate an object with the age that was inputted
+   * @param direction delivery, the number being delivered
    */
-  private MessagePayload createPayload(int fieldNumber, int direction) {
-    MessagePayload payload = new MessagePayload(fieldNumber, direction);
+  private MessagePayload createPayload(int delivery) {
+    MessagePayload payload = new MessagePayload(age);
     return payload;
   }
 
@@ -75,11 +75,9 @@ public class View extends javax.swing.JFrame implements MessageHandler {
         askingNameIn = new javax.swing.JTextField();
         askingAge = new javax.swing.JLabel();
         askingAgeIn = new javax.swing.JTextField();
-        minAge = new javax.swing.JLabel();
-        maxAge = new javax.swing.JLabel();
-        datingImpermissable = new javax.swing.JToggleButton();
         minAgeOut = new javax.swing.JLabel();
         maxAgeOut = new javax.swing.JLabel();
+        buttonForInput = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -99,20 +97,16 @@ public class View extends javax.swing.JFrame implements MessageHandler {
             }
         });
 
-        minAge.setText("Minimum Permissable Age");
+        minAgeOut.setText("Minimum Permissable Age");
 
-        maxAge.setText("Maximum Permissable Age");
+        maxAgeOut.setText("Maximum Permissable Age");
 
-        datingImpermissable.setText("It is Impermissable for you to Date");
-        datingImpermissable.addActionListener(new java.awt.event.ActionListener() {
+        buttonForInput.setText("Check Dating Ages");
+        buttonForInput.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                datingImpermissableActionPerformed(evt);
+                buttonForInputActionPerformed(evt);
             }
         });
-
-        minAgeOut.setText("?");
-
-        maxAgeOut.setText("?");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -131,18 +125,14 @@ public class View extends javax.swing.JFrame implements MessageHandler {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(askingAgeIn, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(askingNameIn, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(maxAgeOut, javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(layout.createSequentialGroup()
-                                    .addComponent(maxAge)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(maxAgeOut, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(minAge)
-                                    .addGap(48, 48, 48)
-                                    .addComponent(minAgeOut, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                    .addComponent(minAgeOut)
+                                    .addGap(130, 130, 130)))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(93, 93, 93)
-                        .addComponent(datingImpermissable, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(buttonForInput, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(52, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -157,15 +147,11 @@ public class View extends javax.swing.JFrame implements MessageHandler {
                     .addComponent(askingAge)
                     .addComponent(askingAgeIn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(28, 28, 28)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(minAge)
-                    .addComponent(minAgeOut))
+                .addComponent(minAgeOut)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(maxAge)
-                    .addComponent(maxAgeOut))
+                .addComponent(maxAgeOut)
                 .addGap(28, 28, 28)
-                .addComponent(datingImpermissable, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(buttonForInput, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(38, Short.MAX_VALUE))
         );
 
@@ -178,14 +164,16 @@ public class View extends javax.swing.JFrame implements MessageHandler {
 
     private void askingAgeInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_askingAgeInActionPerformed
         Scanner sb = new Scanner(System.in);
-        age1 = sb.nextDouble();
+        if (sb.hasNextDouble()) {
+            age1 = sb.nextDouble();
         int age = (int)age1;
         mvcMessaging.notify("view:ageChanged", age);
+        }
     }//GEN-LAST:event_askingAgeInActionPerformed
 
-    private void datingImpermissableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_datingImpermissableActionPerformed
+    private void buttonForInputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonForInputActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_datingImpermissableActionPerformed
+    }//GEN-LAST:event_buttonForInputActionPerformed
 
   /**
    * @param args the command line arguments
@@ -196,10 +184,8 @@ public class View extends javax.swing.JFrame implements MessageHandler {
     private javax.swing.JTextField askingAgeIn;
     private javax.swing.JLabel askingName;
     private javax.swing.JTextField askingNameIn;
-    private javax.swing.JToggleButton datingImpermissable;
-    private javax.swing.JLabel maxAge;
+    private javax.swing.JToggleButton buttonForInput;
     private javax.swing.JLabel maxAgeOut;
-    private javax.swing.JLabel minAge;
     private javax.swing.JLabel minAgeOut;
     // End of variables declaration//GEN-END:variables
 }
